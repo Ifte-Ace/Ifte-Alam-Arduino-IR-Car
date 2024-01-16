@@ -1,0 +1,114 @@
+#include <IRremote.h>
+
+char command;
+int receiver_pin = 4; //Connect the output pin of IR receiver at pin 4
+IRrecv irrecv(receiver_pin);
+decode_results results;
+
+// Motor Pins
+//left
+int enA = 8;
+int in1 = 12;
+//right
+int enB = 7;
+int in3 = 10;
+
+void setup()
+{
+Serial.begin(9600);
+irrecv.enableIRIn();
+
+pinMode(enA, OUTPUT);
+pinMode(enB, OUTPUT);
+pinMode(in1, OUTPUT);
+pinMode(in3, OUTPUT);
+}
+
+Page 22
+
+void loop() {
+if (irrecv.decode(&results)) {
+irrecv.resume();
+//Button 2 Foward
+if (results.value == 0xFF18E7) {
+
+Serial.println("Button 2");
+// Left Motor
+digitalWrite(in1, HIGH);
+analogWrite(enA, 255);
+//Right Motor
+digitalWrite(in3, HIGH);
+analogWrite(enB, 255);
+
+}
+else if (results.value == 0xFF10EF) {
+//Button 4 Turn Left
+
+Serial.println("Button 4");
+digitalWrite(in1, HIGH);
+//Left Motor
+analogWrite(enA, 100);
+//Right Motor
+digitalWrite(in3, LOW);
+analogWrite(enB, 100);
+
+} else if (results.value == 0xFF30CF) {
+//Button 1
+
+Page 23
+
+// Clockwise Turn
+Serial.println("Button Turn Right");
+// Left Motor
+digitalWrite(in1, HIGH);
+analogWrite(enA, 100);
+// Right Motor
+digitalWrite(in3, LOW);
+analogWrite(enB, 100);
+
+} else if (results.value == 0xFF5AA5) {
+//Button 6
+// Turn Right
+Serial.println("Button Turn Left");
+// Left Motor
+digitalWrite(in1, LOW);
+analogWrite(enA, 100);
+// Right Motor
+digitalWrite(in3, HIGH);
+analogWrite(enB, 100);
+} else if (results.value == 0xFF7A85) {
+//Button 3
+// CounterClockwise Turn
+// Left Motor
+digitalWrite(in1, LOW);
+analogWrite(enA, 100);
+// Right Motor
+digitalWrite(in3, HIGH);
+analogWrite(enB, 100);
+} else if (results.value == 0xFF4AB5) {
+//Button 8
+
+Page 24
+
+// Reverse
+// Left Motor
+digitalWrite(in1, LOW);
+analogWrite(enA, 100);
+// Right Motor
+digitalWrite(in3, LOW);
+analogWrite(enB, 100);
+
+} else if (results.value == 0xFF38C7) {
+//Button 5
+
+// Stop/Park
+//Left Motor
+digitalWrite(in1, LOW);
+analogWrite(enA, 100);
+// Right Motor
+digitalWrite(in3, LOW);
+analogWrite(enB, 100);
+
+}
+}
+}
